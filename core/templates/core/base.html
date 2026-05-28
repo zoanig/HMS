@@ -16,7 +16,7 @@
 
 <div class="navbar bg-base-100 lg:w-[80dvw] m-auto">
   <div class="navbar-start">
-    <a class="btn btn-ghost text-xl">HMS</a>
+    <a class="btn btn-ghost text-xl" href="{% url "core:index" %}">HMS</a>
 </div>
 <div class="navbar-end">
     <div class="dropdown dropdown-end">
@@ -30,8 +30,13 @@
         <li>
           <a>Account</a> 
           <ul class="p-2">
+            {% if request.user.is_authenticated %}
             <li><a>Profile</a></li>
             <li><a href="{% url "accounts:logout" %}" class="link link-hover link-error">Logout</a></li>
+            {% else %}
+            <li><a href="{% url "accounts:signup" %}" class="link link-hover">Sign Up</a></li>
+            <li><a href="{% url "accounts:login" %}" class="link link-hover">Log In</a></li>
+            {% endif %}
           </ul>
         </li>
       </ul>
@@ -44,8 +49,13 @@
         <details>
           <summary>Account</summary>
           <ul class="p-2 bg-base-100 w-40 z-1">
+            {% if request.user.is_authenticated %}
             <li><a>Profile</a></li>
             <li><a href="{% url "accounts:logout" %}" class="link link-hover link-error">Logout</a></li>
+            {% else %}
+            <li><a href="{% url "accounts:signup" %}" class="link link-hover">Sign Up</a></li>
+            <li><a href="{% url "accounts:login" %}" class="link link-hover">Log In</a></li>
+            {% endif %}
           </ul>
         </details>
       </li>
