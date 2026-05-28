@@ -8,7 +8,6 @@ def user_login(request):
         return redirect("core:index")
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
-        print(form.is_valid())
         if form.is_valid():
             user = authenticate(**form.cleaned_data)
             if user is not None:
@@ -22,3 +21,17 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect("core:index")
+
+def signUp_user(request):
+    if request.user.is_authenticated:
+        return redirect("core:index")
+    if request.method == 'POST':
+        form = SignUPForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.save()
+            login(request, user)
+            return redirect("core:index")
+        return render(request, "signup.html", {"form": form})
+    
+    return render(request, "signup.html", {"form": SignUPForm()})
