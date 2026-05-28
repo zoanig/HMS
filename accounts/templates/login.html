@@ -4,7 +4,7 @@
 
 {% block content %}
 
-<div class="border-2">
+<div>
   <form action="{% url "accounts:login" %}" method="post">
     {% csrf_token %}
     <fieldset class="fieldset">
@@ -26,6 +26,7 @@
         {% endfor %}
     {% endif %}
     </fieldset>
+    <p>Don't have an account? <a class="link link-primary" href="{% url "accounts:signup" %}">Create New</a></p>
 
     <button class="btn btn-primary">Login</button>
     {% if form.non_field_errors %}
