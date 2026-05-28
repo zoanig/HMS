@@ -1,9 +1,16 @@
-{% extends "base.html" %}
+{% extends "core/base.html" %}
 {% block title %}Home{% endblock %}
 
 {% block content %}
 
 <h1>This is from Home</h1>
 <button class="btn btn-soft">Hello</button>
+
+{% if request.user.is_authenticated %}
+
+    <p>Hello, {{request.user}}</p>
+    <a href="{% url "accounts:logout" %}">Logout</a>
+
+{% endif %}
 
 {% endblock %}
