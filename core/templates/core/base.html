@@ -7,15 +7,15 @@
     <title>HMS | {% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static "style.css" %}">
     <link rel="shortcut icon" href="{% static "logo.png" %}" type="image/x-icon">
-    {% comment %} <style>
+    <style>
         *{
-            border: 1px solid red;
+            
         }
-    </style> {% endcomment %}
+    </style>
 </head>
 <body>
 
-<div class="navbar bg-base-100 lg:w-[80dvw] m-auto">
+<div class="navbar bg-base-100 lg:w-[80dvw] m-auto h-[10dvh]">
   <div class="navbar-start">
     <a class="btn btn-ghost text-xl" href="{% url "core:index" %}">HMS</a>
 </div>
@@ -64,7 +64,9 @@
   </div>
 </div>
 
-    {% block content %}{% endblock %}
+<div class="lg:w-[75dvw] m-auto min-h-[90dvh]">
+  {% block content %}{% endblock %}
+</div>
 
 
     <script src="{% static "index.js" %}"></script>

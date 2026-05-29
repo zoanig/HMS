@@ -9,11 +9,11 @@ class SignUPForm(forms.ModelForm):
         fields = ["username", "password"]
         widgets = {
             "username": forms.TextInput(attrs={
-                "class": "input",
+                "class": "input w-[100%]",
                 "placeholder": "Type here",
                 }),
             "password": forms.PasswordInput(attrs={
-                    "class": "input",
+                    "class": "input w-[100%]",
                     "placeholder": "Type here",
                 }),
         }
@@ -22,10 +22,10 @@ class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
 
-    username = UsernameField(label="Username", widget=forms.TextInput(attrs={"autofocus": True, "class": "input"}))
+    username = UsernameField(label="Username", widget=forms.TextInput(attrs={"autofocus": True, "class": "input w-[100%]"}))
     password = forms.CharField(
         label="Password",
         strip=False,
-        widget=forms.PasswordInput(attrs={"autocomplete": "current-password", "class": "input"}),
+        widget=forms.PasswordInput(attrs={"autocomplete": "current-password", "class": "input w-[100%]"}),
     )
     
