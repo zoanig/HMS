@@ -1,43 +1,129 @@
-{% extends "patient_base.html" %}
+{% extends "patient_base.html" %} {% block title %}Dashboard{% endblock %}
+{% block dash_title %}Patient Dashboard{% endblock %} {% block dash_content %}
 
-{% block title %}Dashboard{% endblock %}
-{% block dash_title %}Dashboard{% endblock %}
-
-{% block dash_content %}
-
-<div class="card card-border bg-base-100">
+<div class="card card-border bg-base-100 shadow-md">
   <div class="card-body">
     <h2 class="card-title">Appointments</h2>
     <div class="overflow-x-auto rounded-box bg-base-200 shadow-sm">
-  <table class="table">
-    <!-- head -->
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Doctor</th>
-        <th>Date</th>
-        <th>Status</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- row 1 -->
- {% for apt in appointments %}
-  
-        <tr>
-          <td>{{apt.id}}</td>
-          <td>{{apt.doctor.name}}</td>
-          <td>{{apt.appointment_date|date:"Y-m-d"}}</td>
-          <td class="font-bold {% if apt.status == 'Scheduled' %}text-warning{% elif apt.status == 'Cancelled' %}text-error{% elif apt.status == 'Completed' %}text-success{% endif %}">{{apt.status}}</td>
-        </tr>
-  
-  {% endfor %}
-    </tbody>
-  </table>
+      <table class="table">
+        <!-- head -->
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Doctor</th>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- row 1 -->
+          {% for apt in appointments %}
 
-</div>
+          <tr>
+            <td>{{apt.id}}</td>
+            <td>{{apt.doctor.name}}</td>
+            <td>{{apt.appointment_date|date:"Y-m-d"}}</td>
+            <td
+              class="font-bold {% if apt.status == 'Scheduled' %}text-warning{% elif apt.status == 'Cancelled' %}text-error{% elif apt.status == 'Completed' %}text-success{% endif %}"
+            >
+              {{apt.status}}
+            </td>
+          </tr>
 
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
+
+<div class="card card-border bg-base-100 shadow-md my-5">
+  <div class="card-body">
+    <h2 class="card-title">Medications</h2>
+     <div class="overflow-x-auto rounded-box bg-base-200 shadow-sm">
+      <table class="table">
+        <!-- head -->
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Medication Name</th>
+            <th>Dosage</th>
+            <th>Duration</th>
+            <th>Start Date</th>
+            
+
+          </tr>
+        </thead>
+        <tbody>
+          <!-- row 1 -->
+          {% for pm in pms %}
+
+          <tr>
+            <td>{{pm.id}}</td>
+            <td>{{pm.medication.name}}</td>
+            <td>{{pm.dosage}}</td>
+            <td>{{pm.duration}}</td>
+            <td>{{pm.prescription.created_at}}</td>
+
+
+          </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<div class="flex gap-5 lg:flex-row flex-col justify-center lg:items-stretch">
+
+<div class="card card-border bg-base-100 w-96 shadow-md lg:w-[50%] w-[100%]">
+  <div class="card-body">
+    <h2 class="card-title">Billings</h2>
+     <div class="overflow-x-auto rounded-box bg-base-200 shadow-sm">
+      <table class="table">
+        <!-- head -->
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- row 1 -->
+          {% for bill in billings %}
+
+          <tr>
+            <td>{{bill.id}}</td>
+            <td>{{bill.total_amount}}</td>
+            <td
+              class="font-bold {% if bill.payment_status == 'Paid' %}text-success{% elif bill.payment_status == 'Pending' %}text-error{% endif %}"
+            >
+              {{bill.payment_status}}
+            </td>
+          </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="card card-border bg-base-100 w-96 shadow-md lg:w-[50%] w-[100%]">
+  <div class="card-body">
+    <h2 class="card-title">Latest Prescription Note</h2>
+    <p>{{latest_prescription.notes}}</p>
+    <div class="text-end">
+      <p>{{latest_prescription.doctor.name}}</p>
+    </div>
+  </div>
+</div>
+
+</div>
 
 {% endblock %}
