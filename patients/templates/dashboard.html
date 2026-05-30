@@ -1,0 +1,43 @@
+{% extends "patient_base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+{% block dash_title %}Dashboard{% endblock %}
+
+{% block dash_content %}
+
+<div class="card card-border bg-base-100">
+  <div class="card-body">
+    <h2 class="card-title">Appointments</h2>
+    <div class="overflow-x-auto rounded-box bg-base-200 shadow-sm">
+  <table class="table">
+    <!-- head -->
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Doctor</th>
+        <th>Date</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- row 1 -->
+ {% for apt in appointments %}
+  
+        <tr>
+          <td>{{apt.id}}</td>
+          <td>{{apt.doctor.name}}</td>
+          <td>{{apt.appointment_date|date:"Y-m-d"}}</td>
+          <td class="font-bold {% if apt.status == 'Scheduled' %}text-warning{% elif apt.status == 'Cancelled' %}text-error{% elif apt.status == 'Completed' %}text-success{% endif %}">{{apt.status}}</td>
+        </tr>
+  
+  {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+  </div>
+</div>
+
+
+{% endblock %}
