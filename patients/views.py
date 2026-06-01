@@ -29,9 +29,8 @@ def get_appointment(request, pk):
     apt = ""
     try:
         apt = patient.appointment_set.get(id=pk)
-        print(apt)
     except ObjectDoesNotExist:
         return render(request, "core/404.html", {"message": "The resource you are trying to access doesnt. Or you're unauthorized to access it"})
     
     context = {"appointment": apt}
-    return 
+    return render(request, "appointment.html", {"apt": apt})
