@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+from datetime import date
+from django.core.exceptions import ValidationError
+
 # Create your models here.
 
 class Patient(models.Model):
@@ -15,6 +19,12 @@ class Patient(models.Model):
     address = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    @property
+    def age(self):
+        today = date.today()
+        has_had_birthday = (today.month, today.day) >= (self.date_of_birth.month, self.date_of_birth.day)
+        return today.year - self.date_of_birth.year - (0 if has_had_birthday else 1)
+    
     def __str__(self):
         return self.name
     
@@ -37,11 +47,34 @@ class Appointment(models.Model):
         COMPLETED = 'Completed'
     patient = models.ForeignKey(Patient ,on_delete=models.CASCADE)
     doctor = models.ForeignKey(Doctor ,on_delete=models.CASCADE)
-    appointment_date = models.DateField()
+    appointment_date = models.DateTimeField()
     status = models.CharField(max_length=9, choices=Status.choices, default=Status.SCHEDULED)
 
     def __str__(self):
         return f"Appointment ID #{self.id}"
+    
+    def clean(self):
+        super().clean()
+
+        start = self.appointment_date
+        end = start + self.duration
+
+        conflicts = Appointment.objects.filter(
+            doctor=self.doctor,
+        ).exclude(pk=self.pk)
+
+        for appt in conflicts:
+            appt_start = appt.appointment_date
+            appt_end = appt_start + appt.duration
+
+            if start < appt_end and end > appt_start:
+                raise ValidationError(
+                    "Doctor already has an overlapping appointment."
+                )
+            
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
 class Medication(models.Model):
     name = models.CharField(max_length=100)
@@ -70,6 +103,33 @@ class PrescriptionMedication(models.Model):
     medication = models.ForeignKey(Medication, on_delete=models.CASCADE)
     dosage = models.CharField(max_length=100)
     duration = models.DurationField()
+
+    @property
+    def end_date(self):
+        return self.prescription.created_at + self.duration
+
+    @property
+    def status(self):
+
+        now = timezone.now()
+
+        if now < self.prescription.created_at:
+            return "Pending"
+
+        elif now <= self.end_date:
+            return "Ongoing"
+
+        return "Completed"
+
+    @property
+    def remaining_time(self):
+
+        now = timezone.now()
+
+        if self.status == "Completed":
+            return None
+
+        return self.end_date - now
 
 class Billing(models.Model):
     class Status(models.TextChoices):

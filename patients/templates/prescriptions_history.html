@@ -1,0 +1,47 @@
+{% extends "patient_base.html" %}
+{% block title %}Prescription History{% endblock %}
+{% block dash_title %}Prescription History{% endblock %}
+
+{% block dash_content %}
+
+<div class="card card-border bg-base-100 shadow-md">
+  <div class="card-body">
+    <h2 class="card-title">Prescriptions</h2>
+    <div class="overflow-x-auto rounded-box bg-base-200 shadow-sm">
+      <table class="table">
+        <!-- head -->
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Doctor</th>
+            <th>Patient</th>
+            <th>Created At</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- row 1 -->
+          {% for prs in prescriptions %}
+
+          <tr class="hover:bg-base-300">
+            <td>{{prs.id}}</td>
+            <td>{{prs.doctor.name}}</td>
+            <td>{{prs.patient.name}}</td>
+            <td>{{prs.created_at|date:"Y-m-d/h:i:s"}}</td>
+            <td><a href="{% url "patients:presc" prs.id %}">
+              <svg class="my-1.5 inline-block size-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+</svg>
+
+            </a></td>
+          </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

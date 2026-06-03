@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-p^o)@g31(cdhq69_a)3btilc)qa*)z=(u_br$e7oiu4wnq5p_c
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -107,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = 'Asia/Karachi'
 
 USE_I18N = True
 
@@ -122,3 +122,5 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+LOGIN_URL = 'accounts:login'

@@ -1,0 +1,43 @@
+{% extends "patient_base.html" %}
+{% block title %}Medications History{% endblock %}
+{% block dash_title %}Medications History{% endblock %}
+
+{% block dash_content %}
+
+    <div class="card card-border bg-base-100 shadow-md">
+        <div class="card-body">
+            <h2 class="card-title">Medications</h2>
+            <div class="w-full overflow-x-auto rounded-box bg-base-200 shadow-sm">
+            <table class="table">
+                <!-- head -->
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Dosage</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- row 1 -->
+                {% for pres_med in pms %}
+
+                <tr class="hover:bg-base-300">
+                    <td>{{pres_med.medication.name}}</td>
+                    <td>{{pres_med.dosage}}</td>
+                    <td>{{pres_med.medication.description}}</td>
+                    <td>{{pres_med.medication.price}}</td>
+                    <td class="font-bold {% if pres_med.status == 'Ongoing' %}text-warning{% elif pres_med.status == 'Pending' %}text-error{% elif pres_med.status == 'Completed' %}text-success{% endif %}">{{pres_med.status}}</td>
+
+                </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+
+
+{% endblock %}
