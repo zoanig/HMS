@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import date
 from django.core.exceptions import ValidationError
+from datetime import timedelta
+
 
 # Create your models here.
 
@@ -49,6 +51,8 @@ class Appointment(models.Model):
     doctor = models.ForeignKey(Doctor ,on_delete=models.CASCADE)
     appointment_date = models.DateTimeField()
     status = models.CharField(max_length=9, choices=Status.choices, default=Status.SCHEDULED)
+    duration = models.DurationField(default=timedelta(minutes=30))
+
 
     def __str__(self):
         return f"Appointment ID #{self.id}"
@@ -56,11 +60,17 @@ class Appointment(models.Model):
     def clean(self):
         super().clean()
 
+        if self.appointment_date <= timezone.now():
+            raise ValidationError(
+                "Appointments cannot be scheduled in the past."
+            )
+
         start = self.appointment_date
         end = start + self.duration
 
         conflicts = Appointment.objects.filter(
             doctor=self.doctor,
+            status=Appointment.Status.SCHEDULED,
         ).exclude(pk=self.pk)
 
         for appt in conflicts:

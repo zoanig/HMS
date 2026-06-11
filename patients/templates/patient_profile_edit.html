@@ -1,0 +1,34 @@
+{% extends "core/base.html" %}
+{% block title %}Edit Profile{% endblock %}
+
+{% block content %}
+
+    <div class="max-w-[70%] m-auto">
+        <form action="{% url "patients:edit_profile" %}" method="post">
+            {% csrf_token %}
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Name</legend>
+                {{form.name}}
+            </fieldset>
+
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Gender</legend>
+                {{form.gender}}
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Date of birth</legend>
+                {{form.date_of_birth}}
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Contact Number</legend>
+                {{form.contact_number}}
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Date of birth</legend>
+                {{form.address}}
+            </fieldset>
+            <button type="submit" class="btn btn-neutral w-[100%]">Submit</button>
+        </form>
+    </div>
+
+{% endblock %}

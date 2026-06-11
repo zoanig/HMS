@@ -27,12 +27,12 @@
       <ul
         tabindex="-1"
         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-        <li><a href="{% url "patients:dashboard" %}">Dashboard</a></li>
+        <li><a href="{% if request.user.is_superuser %}{% url "admin:index" %}{% else %}href="{% url "patients:dashboard" %}{% endif %}">Dashboard</a></li>
         <li>
           <a>Account</a> 
           <ul class="p-2">
             {% if request.user.is_authenticated %}
-            <li><a>Profile</a></li>
+            <li><a href="{% url "patients:profile" %}">Profile</a></li>
             <li><a href="{% url "accounts:logout" %}" class="link link-hover link-error">Logout</a></li>
             {% else %}
             <li><a href="{% url "accounts:signup" %}" class="link link-hover">Sign Up</a></li>
@@ -45,13 +45,13 @@
 </div>
   <div class="navbar-end hidden lg:flex">
     <ul class="menu menu-horizontal px-1">
-      <li><a href="{% url "patients:dashboard" %}">Dashboard</a></li>
+      <li><a href="{% if request.user.is_superuser %}{% url "admin:index" %}{% else %}{% url "patients:dashboard" %}{% endif %}">Dashboard</a></li>
       <li>
         <details>
           <summary>Account</summary>
           <ul class="p-2 bg-base-100 w-40 z-1">
             {% if request.user.is_authenticated %}
-            <li><a>Profile</a></li>
+            <li><a href="{% url "patients:profile" %}">Profile</a></li>
             <li><a href="{% url "accounts:logout" %}" class="link link-hover link-error">Logout</a></li>
             {% else %}
             <li><a href="{% url "accounts:signup" %}" class="link link-hover">Sign Up</a></li>

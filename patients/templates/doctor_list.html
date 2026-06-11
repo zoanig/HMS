@@ -1,0 +1,25 @@
+{% extends "patient_base.html" %}
+{% block dash_title %}Doctors List{% endblock %}
+{% block title %}Doctors List{% endblock %}
+
+{% block dash_content %}
+
+    <div class="flex flex-wrap gap-3 justify-center">
+        {% for doctor in doctors %}
+        
+            <div class="card card-border bg-base-100 w-96 shadow-sm">
+                <div class="card-body">
+                    <h2 class="card-title">{{doctor.name}}</h2>
+                    <p>{{doctor.specialization}}</p>
+                        <div class="card-actions">
+                        <a href="{% url "patients:apt_new" doctor.id %}" class="btn btn-neutral w-full">Book Appointment</a>
+                        </div>
+                </div>
+            </div>
+        
+        {% endfor %}
+
+    </div>
+
+
+{% endblock %}

@@ -60,7 +60,10 @@
             </div>
         </div>
         <p class="text-2xl font-bold text-center mt-3" >{{time}}</p>
+        {% if apt.status == "Scheduled" %}
 
+        <p class="text-center mt-3"><a class="btn btn-error" href="{% url "patients:apt_cancel" apt.id %}">Cancel Appointment</a></p>
+        {% endif %}
     </div>
 
     <script type="module" src="{% static "cally.js" %}"></script>

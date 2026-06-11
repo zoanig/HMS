@@ -1,0 +1,205 @@
+{% extends "core/base.html" %}
+{% block title %}New Appointment{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+
+    <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+
+            <h1 class="card-title text-3xl text-center">
+                Book Appointment
+            </h1>
+
+            <div class="divider"></div>
+
+            <!-- Doctor Information -->
+
+            <div class="alert">
+                <div>
+                    <h2 class="font-bold text-lg">
+                        Dr. {{ doctor.name }}
+                    </h2>
+
+                    <p class="text-sm opacity-70">
+                        {{ doctor.specialization }}
+                    </p>
+                </div>
+            </div>
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-error mt-4">
+                    <div>
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+
+            <form method="post" class="space-y-6 mt-6">
+                {% csrf_token %}
+
+                <!-- Date -->
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">
+                            Select Date
+                        </span>
+                    </label>
+
+                    <input
+                        id="appointment-date"
+                        name="appointment_date"
+                        type="date"
+                        class="input input-bordered w-full"
+                        min="{{ today|date:'Y-m-d' }}"
+                        required
+                    >
+
+                    {% if form.appointment_date.errors %}
+                        <label class="label">
+                            {% for error in form.appointment_date.errors %}
+                                <span class="label-text-alt text-error">
+                                    {{ error }}
+                                </span>
+                            {% endfor %}
+                        </label>
+                    {% endif %}
+                </div>
+
+                <!-- Time Slot -->
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text">
+                            Available Time Slots
+                        </span>
+                    </label>
+
+                    <select
+                        id="appointment-time"
+                        name="appointment_time"
+                        class="select select-bordered w-full"
+                        required
+                    >
+                        <option selected disabled>
+                            Select a date first
+                        </option>
+                    </select>
+
+                    {% if form.appointment_time.errors %}
+                        <label class="label">
+                            {% for error in form.appointment_time.errors %}
+                                <span class="label-text-alt text-error">
+                                    {{ error }}
+                                </span>
+                            {% endfor %}
+                        </label>
+                    {% endif %}
+                </div>
+
+                <!-- Loading -->
+
+                <div
+                    id="loading-indicator"
+                    class="hidden text-center"
+                >
+                    <span class="loading loading-spinner loading-md"></span>
+                </div>
+
+                <!-- Submit -->
+
+                <div class="card-actions justify-end">
+                    <button
+                        type="submit"
+                        class="btn btn-neutral w-full"
+                    >
+                        Confirm Appointment
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    const dateInput = document.getElementById("appointment-date");
+    const timeSelect = document.getElementById("appointment-time");
+    const loading = document.getElementById("loading-indicator");
+
+    dateInput.addEventListener("change", async () => {
+
+        const selectedDate = dateInput.value;
+
+        if (!selectedDate) return;
+
+        loading.classList.remove("hidden");
+
+        timeSelect.innerHTML = `
+            <option disabled selected>
+                Loading...
+            </option>
+        `;
+
+        try {
+            const response = await fetch(
+                "{% url 'patients:available_slots' doctor.id %}?date=" +
+                selectedDate, {
+                    cache: "no-store"
+                }
+            );
+
+            const data = await response.json();
+
+            timeSelect.innerHTML = "";
+
+            if (data.slots.length === 0) {
+
+                timeSelect.innerHTML = `
+                    <option disabled selected>
+                        No available slots
+                    </option>
+                `;
+
+            } else {
+
+                timeSelect.innerHTML = `
+                    <option disabled selected>
+                        Select a time slot
+                    </option>
+                `;
+
+                data.slots.forEach(slot => {
+
+                    const option = document.createElement("option");
+
+                    option.value = slot;
+                    option.textContent = slot;
+
+                    timeSelect.appendChild(option);
+                });
+            }
+
+        } catch (error) {
+
+            timeSelect.innerHTML = `
+                <option disabled selected>
+                    Unable to load slots
+                </option>
+            `;
+
+        } finally {
+
+            loading.classList.add("hidden");
+        }
+    });
+});
+</script>
+{% endblock %}
