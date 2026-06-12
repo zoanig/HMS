@@ -28,10 +28,9 @@ def signUp_user(request):
     if request.method == 'POST':
         form = SignUPForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.save()
+            user = form.save()
             login(request, user)
-            return redirect("core:index")
+            return redirect("patients:new_profile")
         return render(request, "signup.html", {"form": form})
-    
+
     return render(request, "signup.html", {"form": SignUPForm()})

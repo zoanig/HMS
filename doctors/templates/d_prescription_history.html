@@ -1,0 +1,43 @@
+{% extends "doctor_base.html" %}
+{% block title %}Prescription History{% endblock %}
+{% block dash_title %}Prescriptions History{% endblock %}
+{% block dash_content %}
+
+<div class="card card-border bg-base-100 shadow-md">
+  <div class="card-body">
+    <h2 class="card-title">Latest Prescriptions</h2>
+    <div class="overflow-x-auto rounded-box bg-base-200 shadow-sm">
+      <table class="table">
+        <!-- head -->
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Patient</th>
+            <th>Medicines</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- row 1 -->
+          {% for presc in prescs %}
+
+          <tr class="hover:bg-base-300">
+            <td>{{presc.id}}</td>
+            <td>{{presc.patient.name}}</td>
+            <td>
+                {% for med in presc.medications.all %}
+                    {{med.name}},
+                {% endfor %}
+            </td>
+            <td>{{presc.created_at|date:"Y-m-d"}}</td>
+          </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}

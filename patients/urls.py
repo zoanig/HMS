@@ -19,6 +19,7 @@ urlpatterns = [
 
     path("profile/", views.get_profile, name="profile"),
     path("profile/edit/", views.edit_profile, name="edit_profile"),
+    path("profile/new/", views.new_profile, name="new_profile"),
 
     path("doctorlist/", views.doctor_list, name="d_list")
 

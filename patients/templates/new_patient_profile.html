@@ -1,0 +1,37 @@
+{% extends "core/base.html" %}
+{% block title %}Create Patient Profle{% endblock %}
+
+{% block content %}
+
+<div>
+    <h1 class="text-3xl mb-3 font-bold text-center">New Patient Profile</h1>
+    <form action="{% url "patients:new_profile" %}" method="post">
+            {% csrf_token %}
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Name</legend>
+                {{form.name}}
+            </fieldset>
+
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Gender</legend>
+                {{form.gender}}
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Date of birth</legend>
+                {{form.date_of_birth}}
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Contact Number</legend>
+                {{form.contact_number}}
+            </fieldset>
+            <fieldset class="fieldset">
+                <legend class="fieldset-legend">Address</legend>
+                {{form.address}}
+            </fieldset>
+            <button type="submit" class="btn btn-neutral w-[100%]">Submit</button>
+    </form>
+    {{form.errors}}
+    <p>Want to be a doctor? <a href="core:index" class="link link-primary">Request To Be A Doctor</a>. You will have to be on-site for that. Contact Admin</p>
+</div>
+
+{% endblock %}

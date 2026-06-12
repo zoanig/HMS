@@ -1,0 +1,78 @@
+{% extends "core/base.html" %}
+{% load static %}
+{% block title %}{{apt.patient.name}}{% endblock %}
+
+{% block content %}
+    <div class="my-[15%]">
+        <h1 class="text-3xl font-bold mb-5 text-center">Appointment Information</h1>
+        <div class="flex gap-3 lg:flex-row flex-col lg:justify-normal justify-center lg:items-stretch items-center ">
+            <calendar-date value="{{ apt.appointment_date|date:'Y-m-d' }}" readonly class="cally bg-base-100 border border-base-300 shadow-lg rounded-box">
+                <svg aria-label="Previous" class="fill-current size-4" slot="previous" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M15.75 19.5 8.25 12l7.5-7.5"></path></svg>
+                <svg aria-label="Next" class="fill-current size-4" slot="next" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="m8.25 4.5 7.5 7.5-7.5 7.5"></path></svg>
+                <calendar-month></calendar-month>
+            </calendar-date>
+            <div class="flex grow lg:flex-row flex-col gap-3 w-[80%]">
+                <div class="grow card card-border bg-base-100 shadow-lg lg:w-[50%] w-[100%]">
+                    <div class="card-body">
+                        <div class="flex justify-between">
+                            <h2 class="card-title">{{apt.doctor.name}}</h2>
+                            {% if apt.status == 'Completed' %}
+                                <div class="badge badge-success">
+                                <svg class="size-[1em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor" stroke-linejoin="miter" stroke-linecap="butt"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></circle><polyline points="7 13 10 16 17 8" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></polyline></g></svg>
+                                {{ apt.status }}
+                                </div>
+                            {% elif apt.status == 'Scheduled' %}
+                                <div class="badge badge-warning">
+                                <svg class="size-[1em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor" stroke-linejoin="miter" stroke-linecap="butt"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></circle><path d="m12,17v-5.5c0-.276-.224-.5-.5-.5h-1.5" fill="none" stroke="currentColor" stroke-linecap="square" stroke-miterlimit="10" stroke-width="2"></path><circle cx="12" cy="7.25" r="1.25" fill="currentColor" stroke-width="2"></circle></g></svg>
+                                {{ apt.status }}
+                                </div>
+                            {% elif apt.status == 'Cancelled' %}
+                                <div class="badge badge-error">
+                                <svg class="size-[1em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="currentColor"><rect x="1.972" y="11" width="20.056" height="2" transform="translate(-4.971 12) rotate(-45)" fill="currentColor" stroke-width="0"></rect><path d="m12,23c-6.065,0-11-4.935-11-11S5.935,1,12,1s11,4.935,11,11-4.935,11-11,11Zm0-20C7.038,3,3,7.037,3,12s4.038,9,9,9,9-4.037,9-9S16.962,3,12,3Z" stroke-width="0" fill="currentColor"></path></g></svg>
+                                {{ apt.status }}
+                                </div>
+                            {% endif %}
+
+                        </div>
+                        <p class="font-bold">{{apt.doctor.specialization}}</p>
+                        <div>
+                            <p class="font-bold">Email</p>
+                            <p>{{apt.doctor.email}}</p>
+                            <p class="font-bold">Contact Number</p>
+                            <p>{{apt.doctor.contact_number}}</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grow card card-border bg-base-100 shadow-lg lg:w-[50%] w-[100%]">
+                    <div class="card-body">
+                        <h2 class="card-title">{{apt.patient.name}}</h2>
+                        <p class="font-bold">{{apt.patient.gender}} ({{apt.patient.age}})</p>
+                        <div>
+                            <p class="font-bold">Address</p>
+                            <p>{{apt.patient.address}}</p>
+                            <p class="font-bold">Contact Number</p>
+                            <p>{{apt.patient.contact_number}}</p>
+                            {% if apt.status == "Completed" %}
+                            <a class="btn btn-success" href="{% url "doctors:new_presc" apt.patient.id %}">Make Prescription</a>
+                            {% endif %}
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <p class="text-2xl font-bold text-center mt-3" >{{time}}</p>
+        {% if apt.status == "Scheduled" %}
+
+        <p class="text-center mt-3">
+            <span class="font-bold">Appointment Action: </span>
+            <a class="btn btn-error" href="{% url "doctors:apt_cancel" apt.id %}">Cancel</a>
+            <a class="btn btn-success" href="{% url "doctors:apt_complete" apt.id %}">Completed</a>
+        </p>
+        {% endif %}
+    </div>
+
+    <script type="module" src="{% static "cally.js" %}"></script>
+
+{% endblock %}

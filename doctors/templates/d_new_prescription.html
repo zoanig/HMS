@@ -1,0 +1,175 @@
+{% extends "core/base.html" %}
+{% block title %}New Prescription{% endblock %}
+
+{% block content %}
+
+<div class="max-w-6xl mx-auto">
+
+    <div class="card bg-base-100 shadow-xl">
+
+        <div class="card-body">
+
+            <h1 class="text-3xl font-bold">
+                New Prescription
+            </h1>
+
+            <p>
+                Patient:
+                {{ patient.name }}
+            </p>
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                {{ formset.management_form }}
+
+                <div class="mt-6">
+
+                    <label class="label">
+                        <span class="label-text">
+                            Notes
+                        </span>
+                    </label>
+
+                    {{ form.notes }}
+
+                </div>
+
+                <div class="divider">
+                    Medications
+                </div>
+
+                <div class="overflow-x-auto">
+
+                    <table class="table table-zebra">
+
+                        <thead>
+                            <tr>
+                                <th>Medication</th>
+                                <th>Dosage</th>
+                                <th>Duration</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="medication-table">
+
+                            {% for med_form in formset %}
+
+                            <tr>
+
+                                {% for hidden in med_form.hidden_fields %}
+                                    {{ hidden }}
+                                {% endfor %}
+
+                                <td>
+                                    {{ med_form.medication }}
+                                </td>
+
+                                <td>
+                                    {{ med_form.dosage }}
+                                </td>
+
+                                <td>
+                                    {{ med_form.duration }}
+                                </td>
+
+                                <td>
+                                    {{ med_form.DELETE }}
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+                <button
+                    type="button"
+                    id="add-row"
+                    class="btn btn-outline mt-4"
+                >
+                    Add Medication
+                </button>
+
+                <div class="mt-8">
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary"
+                    >
+                        Create Prescription
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+    <script>
+    const addButton = document.getElementById("add-row");
+
+    addButton.addEventListener("click", () => {
+
+        const totalForms =
+            document.getElementById(
+                "id_prescriptionmedication_set-TOTAL_FORMS"
+            );
+
+        const currentCount =
+            parseInt(totalForms.value);
+
+        const tbody =
+            document.getElementById(
+                "medication-table"
+            );
+
+        const firstRow =
+            tbody.querySelector("tr");
+
+        const clone =
+            firstRow.cloneNode(true);
+
+        clone.innerHTML =
+            clone.innerHTML.replaceAll(
+                /-0-/g,
+                `-${currentCount}-`
+            );
+
+        clone.innerHTML =
+            clone.innerHTML.replaceAll(
+                /_0_/g,
+                `_${currentCount}_`
+            );
+
+        clone.querySelectorAll(
+            "input, select"
+        ).forEach(el => {
+
+            if (
+                el.type !== "hidden"
+            ) {
+                el.value = "";
+            }
+
+        });
+
+        tbody.appendChild(clone);
+
+        totalForms.value =
+            currentCount + 1;
+
+    });
+    </script>
+
+{% endblock %}

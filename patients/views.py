@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from core.models import Patient, Appointment, Billing, PrescriptionMedication, Doctor
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.contrib import messages
@@ -124,13 +124,14 @@ def cancel_appointment(request, pk):
 def new_profile(request):
     patient = get_patinet_or_redirect(request, "core:index")
     is_doctor = Doctor.objects.filter(user=request.user).exists()
-    if isinstance(patient, Patient) or not is_doctor:
-        return patient
+    if isinstance(patient, Patient) or is_doctor:
+        return redirect("core:index")
     if request.method == 'POST':
         form = PatientProfile(request.POST)
         if form.is_valid():
-            form.save()
-            redirect("patients:dashboard")
+            patient = Patient.objects.create(**form.cleaned_data, user=request.user)
+            patient.save()
+            return redirect("patients:dashboard")
     else:
         form = PatientProfile()
     context = {"form": form}
