@@ -206,17 +206,16 @@ def new_appointment(request, doctor_id):
 
         if form.is_valid():
             try:
-                with transaction.atomic():
-                    appointment = Appointment(
-                        patient=patient,
-                        doctor=doctor,
-                        appointment_date=form.cleaned_data[
-                            "appointment_datetime"
-                        ]
-                    )
+                appointment = Appointment(
+                    patient=patient,
+                    doctor=doctor,
+                    appointment_date=form.cleaned_data[
+                        "appointment_datetime"
+                    ]
+                )
 
-                    appointment.full_clean()
-                    appointment.save()
+                appointment.full_clean()
+                appointment.save()
 
                 messages.success(
                     request,
