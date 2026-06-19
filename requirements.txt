@@ -1,0 +1,5 @@
+asgiref==3.11.1
+Django==6.0.2
+django-daisy==2.0.8
+humanize==4.15.0
+sqlparse==0.5.5
