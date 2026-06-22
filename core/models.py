@@ -26,10 +26,10 @@ class Patient(models.Model):
         today = date.today()
         has_had_birthday = (today.month, today.day) >= (self.date_of_birth.month, self.date_of_birth.day)
         return today.year - self.date_of_birth.year - (0 if has_had_birthday else 1)
-    
+
     def __str__(self):
         return self.name
-    
+
 
 class Doctor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -55,8 +55,8 @@ class Appointment(models.Model):
 
 
     def __str__(self):
-        return f"Appointment ID #{self.id}"
-    
+        return f"Appointment ID #{self.pk}"
+
     def clean(self):
         super().clean()
 
@@ -81,7 +81,7 @@ class Appointment(models.Model):
                 raise ValidationError(
                     "Doctor already has an overlapping appointment."
                 )
-            
+
     def save(self, *args, **kwargs):
         self.full_clean()
         return super().save(*args, **kwargs)
@@ -105,7 +105,7 @@ class Prescription(models.Model):
 )
 
     def __str__(self):
-        return f"Prescription ID #{self.id}"
+        return f"Prescription ID #{self.pk}"
 
 
 class PrescriptionMedication(models.Model):
@@ -151,6 +151,3 @@ class Billing(models.Model):
 
     def __str__(self):
         return f"{self.patient.name} - {self.payment_status}"
-    
-
-
